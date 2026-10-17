@@ -1,58 +1,63 @@
 package com.edupass.app.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+import androidx.compose.ui.unit.dp
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = EduPassBlue,
+    onPrimary = EduPassTextOnPrimary,
+    primaryContainer = EduPassBlueLight,
+    onPrimaryContainer = EduPassTextPrimary,
+    secondary = EduPassBlueDark,
+    onSecondary = EduPassTextOnPrimary,
+    background = EduPassBackground,
+    onBackground = EduPassTextPrimary,
+    surface = EduPassSurface,
+    onSurface = EduPassTextPrimary,
+    surfaceVariant = EduPassBackground,
+    onSurfaceVariant = EduPassTextSecondary,
+    outline = EduPassTextSecondary
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val DarkColorScheme = darkColorScheme(
+    primary = EduPassBlueDarkTheme,
+    onPrimary = EduPassTextPrimary,
+    primaryContainer = EduPassBlueDark,
+    onPrimaryContainer = EduPassTextPrimaryDark,
+    secondary = EduPassBlueLight,
+    onSecondary = EduPassTextPrimary,
+    background = EduPassBackgroundDark,
+    onBackground = EduPassTextPrimaryDark,
+    surface = EduPassSurfaceDark,
+    onSurface = EduPassTextPrimaryDark,
+    surfaceVariant = EduPassSurfaceDark,
+    onSurfaceVariant = EduPassTextSecondaryDark,
+    outline = EduPassTextSecondaryDark
+)
+
+private val EduPassShapes = Shapes(
+    small = RoundedCornerShape(8.dp),
+    medium = RoundedCornerShape(12.dp),
+    large = RoundedCornerShape(16.dp)
 )
 
 @Composable
 fun EduPassTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = EduPassShapes,
         content = content
     )
 }
