@@ -7,7 +7,8 @@ val EduPassBlue = Color(0xFF2196F3)
 val EduPassBlueDark = Color(0xFF1976D2)
 val EduPassBlueLight = Color(0xFF64B5F6)
 
-// EduPass Accent Colors
+// EduPass Branding Colors
+val EduPassNavy = Color(0xFF0D2342) // Dark Navy for "Edu" branding
 val EduPassRed = Color(0xFFE53935)
 
 // Background and Surface
