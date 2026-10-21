@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.edupass.app.ui.student.dashboard.StudentDashboardScreen
 import com.edupass.app.ui.login.LoginScreen
 import com.edupass.app.ui.splash.SplashScreen
 import com.edupass.app.ui.theme.EduPassTheme
@@ -17,7 +18,8 @@ import kotlinx.coroutines.delay
 
 enum class Screen {
     Splash,
-    Login
+    Login,
+    StudentDashBoard
 }
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +40,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     Screen.Login -> {
-                        LoginScreen()
+                        LoginScreen(
+                            onSignInClick = { collegeId, role ->
+                                currentScreen = Screen.StudentDashBoard
+                            }
+                        )
+                    }
+                    Screen.StudentDashBoard -> {
+                        StudentDashboardScreen()
                     }
                 }
             }
