@@ -123,7 +123,8 @@ fun StudentDashboardScreen(
     onViewAllEventsClick: () -> Unit = {},
     onViewAllUpdatesClick: () -> Unit = {},
     onRequestItemClick: (RecentRequest) -> Unit = {},
-    onEventItemClick: (CollegeEvent) -> Unit = {}
+    onEventItemClick: (CollegeEvent) -> Unit = {},
+    onRequestsTabClick: () -> Unit = {},
 ) {
     var selectedTab by remember { mutableIntStateOf(StudentNavTab.HOME.ordinal) }
 
@@ -180,7 +181,13 @@ fun StudentDashboardScreen(
         bottomBar = {
             StudentBottomNavBar(
                 selectedTabIndex = selectedTab,
-                onTabSelected = { selectedTab = it }
+                onTabSelected = { index ->
+                    if (StudentNavTab.entries[index] == StudentNavTab.REQUESTS) {
+                        onRequestsTabClick()
+                    } else {
+                        selectedTab = index
+                    }
+                }
             )
         }
     ) { innerPadding ->

@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.edupass.app.ui.student.requests.MyRequestsScreen
 import com.edupass.app.ui.student.permission.RequestReviewScreen
 import com.edupass.app.ui.student.permission.DocumentUploadScreen
 import com.edupass.app.ui.student.permission.ApplyPermissionScreen
@@ -25,7 +26,8 @@ enum class Screen {
     StudentDashBoard,
     ApplyPermission,
     DocumentUpload,
-    RequestReview
+    RequestReview,
+    MyRequests,
 }
 
 class MainActivity : ComponentActivity() {
@@ -56,6 +58,9 @@ class MainActivity : ComponentActivity() {
                         StudentDashboardScreen(
                             onRequestPermissionClick = {
                                 currentScreen = Screen.ApplyPermission
+                            },
+                            onRequestsTabClick = {
+                                currentScreen = Screen.MyRequests
                             }
                         )
                     }
@@ -83,6 +88,15 @@ class MainActivity : ComponentActivity() {
                         RequestReviewScreen(
                             onEditDetailsClick = {
                                 currentScreen = Screen.ApplyPermission
+                            }
+                        )
+                    }
+                    Screen.MyRequests -> {
+                        MyRequestsScreen(
+                            onBottomNavTabSelected = { index ->
+                                if (index == 0) {
+                                    currentScreen = Screen.StudentDashBoard
+                                }
                             }
                         )
                     }
