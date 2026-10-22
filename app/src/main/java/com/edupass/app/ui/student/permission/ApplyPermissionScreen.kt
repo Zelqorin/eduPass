@@ -20,7 +20,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -41,6 +44,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -87,71 +91,128 @@ fun ApplyPermissionScreen(
     var selectedDate by rememberSaveable { mutableStateOf("18 Jun 2025") }
     var startTime by rememberSaveable { mutableStateOf("10:00 AM") }
     var endTime by rememberSaveable { mutableStateOf("02:00 PM") }
+    var reason by rememberSaveable { mutableStateOf("") }
+    var organization by rememberSaveable { mutableStateOf("") }
+    var contactDetails by rememberSaveable { mutableStateOf("") }
 
-    Column(
+    // Wrap everything in a Box to allow floating the Next button at the bottom
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(EduPassScreenBg)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        horizontalAlignment = Alignment.Start
     ) {
-        // 1. Header Bar: College Logo + App Title + Notification Button
-        ApplyPermissionHeader(
-            onNotificationClick = onNotificationClick,
-            onBackClick = onBackClick)
+        // Scrollable Content Column
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp)
+                .padding(bottom = 90.dp), // Extra padding so the floating button doesn't cover the last input
+            horizontalAlignment = Alignment.Start
+        ) {
+            // 1. Header Bar: Back Button + College Logo + App Title + Notification Button
+            ApplyPermissionHeader(
+                onNotificationClick = onNotificationClick,
+                onBackClick = onBackClick
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-        // 2. Section Subtitle and Screen Heading
-        Text(
-            text = "NEW PERMISSION",
-            color = EduPassTextSecondary,
-            fontSize = 11.5.sp,
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = 0.8.sp
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = "Request permission",
-            color = EduPassNavy,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = (-0.5).sp
-        )
+            // 2. Section Subtitle and Screen Heading
+            Text(
+                text = "NEW PERMISSION",
+                color = EduPassTextSecondary,
+                fontSize = 11.5.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.8.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Request permission",
+                color = EduPassNavy,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = (-0.5).sp
+            )
 
-        Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
-        // 3. Three-Segment Progress Indicator (Step 1 of 3 active)
-        ThreeStepProgressIndicator(currentStep = 1)
+            // 3. Three-Segment Progress Indicator (Step 1 of 3 active)
+            ThreeStepProgressIndicator(currentStep = 1)
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        // 4. Progress Card
-        ProgressCard()
+            // 4. Progress Card
+            ProgressCard()
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // 5. Applicant Identity Card
-        ApplicantIdentityCard(applicant = applicant)
+            // 5. Applicant Identity Card
+            ApplicantIdentityCard(applicant = applicant)
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // 6. Purpose and Schedule Form Card
-        PermissionDetailsCard(
-            permissionType = permissionType,
-            onPermissionTypeChange = { permissionType = it },
-            selectedDate = selectedDate,
-            onDateChange = { selectedDate = it },
-            startTime = startTime,
-            onStartTimeChange = { startTime = it },
-            endTime = endTime,
-            onEndTimeChange = { endTime = it }
-        )
+            // 6. Purpose and Schedule Form Card
+            PermissionDetailsCard(
+                permissionType = permissionType,
+                onPermissionTypeChange = { permissionType = it },
+                selectedDate = selectedDate,
+                onDateChange = { selectedDate = it },
+                startTime = startTime,
+                onStartTimeChange = { startTime = it },
+                endTime = endTime,
+                onEndTimeChange = { endTime = it },
+                reason = reason,
+                onReasonChange = { reason = it },
+                organization = organization,
+                onOrganizationChange = { organization = it },
+                contactDetails = contactDetails,
+                onContactDetailsChange = { contactDetails = it }
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        // 7. Floating "Next" Button at the bottom
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .background(EduPassWhite)
+                .navigationBarsPadding()
+                .padding(horizontal = 20.dp, vertical = 16.dp)
+        ) {
+            Button(
+                onClick = { onNextClick() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = EduPassBlue,
+                    contentColor = EduPassWhite
+                ),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Next step",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "→",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -170,6 +231,7 @@ private fun ApplyPermissionHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            // Back Button
             Box(
                 modifier = Modifier
                     .size(42.dp)
@@ -186,7 +248,8 @@ private fun ApplyPermissionHeader(
             }
             
             Spacer(modifier = Modifier.width(12.dp))
-            
+
+            // Logo & Title
             Image(
                 painter = painterResource(id = R.drawable.ic_edupass_logo),
                 contentDescription = "VIIT Logo",
@@ -437,7 +500,13 @@ private fun PermissionDetailsCard(
     startTime: String,
     onStartTimeChange: (String) -> Unit,
     endTime: String,
-    onEndTimeChange: (String) -> Unit
+    onEndTimeChange: (String) -> Unit,
+    reason: String,
+    onReasonChange: (String) -> Unit,
+    organization: String,
+    onOrganizationChange: (String) -> Unit,
+    contactDetails: String,
+    onContactDetailsChange: (String) -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
     val permissionTypes = listOf(
@@ -623,12 +692,123 @@ private fun PermissionDetailsCard(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // 4. Reason / Description
+            Text(
+                text = "Reason / Description",
+                color = EduPassNavy,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(EduPassFieldBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, EduPassFieldBorder, RoundedCornerShape(12.dp))
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                contentAlignment = Alignment.TopStart
+            ) {
+                if (reason.isEmpty()) {
+                    Text(
+                        text = "Briefly explain why you need this permission...",
+                        color = EduPassTextMuted,
+                        fontSize = 14.5.sp
+                    )
+                }
+                BasicTextField(
+                    value = reason,
+                    onValueChange = onReasonChange,
+                    modifier = Modifier.fillMaxSize(),
+                    textStyle = TextStyle(
+                        color = EduPassTextPrimary,
+                        fontSize = 14.5.sp
+                    ),
+                    cursorBrush = SolidColor(EduPassBlue),
+                    maxLines = 4
+                )
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // 5. Organization / Destination
+            Text(
+                text = "Organization / Destination",
+                color = EduPassNavy,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(EduPassFieldBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, EduPassFieldBorder, RoundedCornerShape(12.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                if (organization.isEmpty()) {
+                    Text(
+                        text = "Company name or event venue",
+                        color = EduPassTextMuted,
+                        fontSize = 14.5.sp
+                    )
+                }
+                BasicTextField(
+                    value = organization,
+                    onValueChange = onOrganizationChange,
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = TextStyle(color = EduPassTextPrimary, fontSize = 14.5.sp),
+                    cursorBrush = SolidColor(EduPassBlue),
+                    singleLine = true
+                )
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            // 6. Contact Details (Optional)
+            Text(
+                text = "Contact Details (Optional)",
+                color = EduPassNavy,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(EduPassFieldBg, RoundedCornerShape(12.dp))
+                    .border(1.dp, EduPassFieldBorder, RoundedCornerShape(12.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                if (contactDetails.isEmpty()) {
+                    Text(
+                        text = "Contact person and phone number",
+                        color = EduPassTextMuted,
+                        fontSize = 14.5.sp
+                    )
+                }
+                BasicTextField(
+                    value = contactDetails,
+                    onValueChange = onContactDetailsChange,
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = TextStyle(color = EduPassTextPrimary, fontSize = 14.5.sp),
+                    cursorBrush = SolidColor(EduPassBlue),
+                    singleLine = true
+                )
+            }
         }
     }
 }
 
 // ---------------------------------------------------------------------------
-// Standalone Vector Icon
+// Standalone Vector Icons
 // ---------------------------------------------------------------------------
 
 private object PermissionIcons {
@@ -654,7 +834,7 @@ private object PermissionIcons {
         curveTo(10f, 20.1f, 10.9f, 21f, 12f, 21f)
         curveTo(13.1f, 21f, 14f, 20.1f, 14f, 19f)
     }.build()
-    
+
     val BackArrow: ImageVector = ImageVector.Builder(
         name = "BackArrow",
         defaultWidth = 24.dp,
