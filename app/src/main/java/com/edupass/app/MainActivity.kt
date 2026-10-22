@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.edupass.app.ui.student.permission.ApplyPermissionScreen
 import com.edupass.app.ui.student.dashboard.StudentDashboardScreen
 import com.edupass.app.ui.login.LoginScreen
 import com.edupass.app.ui.splash.SplashScreen
@@ -19,7 +20,8 @@ import kotlinx.coroutines.delay
 enum class Screen {
     Splash,
     Login,
-    StudentDashBoard
+    StudentDashBoard,
+    ApplyPermission
 }
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +49,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     Screen.StudentDashBoard -> {
-                        StudentDashboardScreen()
+                        StudentDashboardScreen(
+                            onRequestPermissionClick = {
+                                currentScreen = Screen.ApplyPermission
+                            }
+                        )
+                    }
+                    Screen.ApplyPermission -> {
+                        ApplyPermissionScreen(
+                            onBackClick = {
+                                currentScreen = Screen.StudentDashBoard
+                            }
+                        )
                     }
                 }
             }
