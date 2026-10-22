@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.edupass.app.ui.student.permission.DocumentUploadScreen
 import com.edupass.app.ui.student.permission.ApplyPermissionScreen
 import com.edupass.app.ui.student.dashboard.StudentDashboardScreen
 import com.edupass.app.ui.login.LoginScreen
@@ -21,7 +22,8 @@ enum class Screen {
     Splash,
     Login,
     StudentDashBoard,
-    ApplyPermission
+    ApplyPermission,
+    DocumentUpload
 }
 
 class MainActivity : ComponentActivity() {
@@ -59,6 +61,16 @@ class MainActivity : ComponentActivity() {
                         ApplyPermissionScreen(
                             onBackClick = {
                                 currentScreen = Screen.StudentDashBoard
+                            },
+                            onNextClick = {
+                                currentScreen = Screen.DocumentUpload
+                            }
+                        )
+                    }
+                    Screen.DocumentUpload -> {
+                        DocumentUploadScreen(
+                            onBackClick = {
+                                currentScreen = Screen.ApplyPermission
                             }
                         )
                     }
