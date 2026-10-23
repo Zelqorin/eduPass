@@ -55,6 +55,7 @@ import com.edupass.app.ui.theme.EduPassScreenBg
 import com.edupass.app.ui.theme.EduPassTextSecondary
 import com.edupass.app.ui.theme.EduPassTheme
 import com.edupass.app.ui.theme.EduPassWhite
+import com.edupass.app.ui.components.EduPassTopHeader
 import kotlin.math.abs
 
 // ---------------------------------------------------------------------------
@@ -81,7 +82,8 @@ data class PermissionPassDetails(
 fun PermissionDetailsScreen(
     modifier: Modifier = Modifier,
     passDetails: PermissionPassDetails = remember { PermissionPassDetails() },
-    onNotificationClick: () -> Unit = {}
+    onNotificationClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -94,7 +96,11 @@ fun PermissionDetailsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // 1. Top Header: College Crest + App Title + Notification Button
-        PassDetailHeader(onNotificationClick = onNotificationClick)
+        EduPassTopHeader(
+            showBackButton = true,
+            onBackClick = onBackClick,
+            onNotificationClick = onNotificationClick
+        )
 
         Spacer(modifier = Modifier.height(18.dp))
 

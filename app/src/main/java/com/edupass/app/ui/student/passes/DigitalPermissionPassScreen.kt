@@ -26,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -51,6 +52,7 @@ import com.edupass.app.ui.theme.EduPassTextSecondary
 import com.edupass.app.ui.theme.EduPassTheme
 import com.edupass.app.ui.theme.EduPassWhite
 import com.edupass.app.ui.components.EduPassTopHeader
+import com.edupass.app.ui.components.EduPassBottomNavBar
 // ---------------------------------------------------------------------------
 // Data Models
 // ---------------------------------------------------------------------------
@@ -82,7 +84,8 @@ fun DigitalPermissionPassScreen(
     passData: DigitalPassData = remember { DigitalPassData() },
     onBackClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
-    onViewDigitalPassClick: (String) -> Unit = {}
+    onViewDigitalPassClick: (String) -> Unit = {},
+    onBottomNavTabSelected: (Int) -> Unit = {}
 ) {
     val timelineStages = remember {
         listOf(
@@ -92,10 +95,22 @@ fun DigitalPermissionPassScreen(
             PassTimelineStage("Digital pass issued", "Ready for campus verification")
         )
     }
+    
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        containerColor = EduPassScreenBg,
+        bottomBar = {
+            EduPassBottomNavBar(
+                selectedTabIndex = 2,
+                onTabSelected = { index -> onBottomNavTabSelected(index)}
+            )
+        }
+    ) { innerPadding ->
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
+            .padding(innerPadding)
             .background(EduPassScreenBg)
             .statusBarsPadding()
             .navigationBarsPadding()
@@ -182,6 +197,7 @@ fun DigitalPermissionPassScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+    }
     }
 }
 
