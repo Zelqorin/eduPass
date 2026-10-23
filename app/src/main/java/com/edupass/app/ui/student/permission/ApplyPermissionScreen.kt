@@ -61,6 +61,7 @@ import com.edupass.app.ui.theme.EduPassTextPrimary
 import com.edupass.app.ui.theme.EduPassTextSecondary
 import com.edupass.app.ui.theme.EduPassTheme
 import com.edupass.app.ui.theme.EduPassWhite
+import com.edupass.app.ui.components.EduPassTopHeader
 
 // ---------------------------------------------------------------------------
 // Sample Data Model
@@ -112,9 +113,10 @@ fun ApplyPermissionScreen(
             horizontalAlignment = Alignment.Start
         ) {
             // 1. Header Bar: Back Button + College Logo + App Title + Notification Button
-            ApplyPermissionHeader(
+            EduPassTopHeader(
+                showBackButton = true,
+                onBackClick = onBackClick,
                 onNotificationClick = onNotificationClick,
-                onBackClick = onBackClick
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -216,80 +218,6 @@ fun ApplyPermissionScreen(
     }
 }
 
-// ---------------------------------------------------------------------------
-// Header Component
-// ---------------------------------------------------------------------------
-
-@Composable
-private fun ApplyPermissionHeader(
-    onNotificationClick: () -> Unit,
-    onBackClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // Back Button
-            Box(
-                modifier = Modifier
-                    .size(42.dp)
-                    .background(EduPassWhite, RoundedCornerShape(12.dp))
-                    .border(1.dp, EduPassCardBorder, RoundedCornerShape(12.dp))
-                    .clickable { onBackClick() },
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    imageVector = PermissionIcons.BackArrow,
-                    contentDescription = "Back",
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            
-            Spacer(modifier = Modifier.width(12.dp))
-
-            // Logo & Title
-            Image(
-                painter = painterResource(id = R.drawable.ic_edupass_logo),
-                contentDescription = "VIIT Logo",
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
-                Text(
-                    text = "EduPass",
-                    color = EduPassNavy,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "STUDENT ACCESS",
-                    color = EduPassTextSecondary,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.8.sp
-                )
-            }
-        }
-
-        // Notification Bell Icon Button
-        Box(
-            modifier = Modifier
-                .size(42.dp)
-                .background(EduPassWhite, RoundedCornerShape(12.dp))
-                .border(1.dp, EduPassCardBorder, RoundedCornerShape(12.dp))
-                .clickable { onNotificationClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                imageVector = PermissionIcons.NotificationBell,
-                contentDescription = "Notifications",
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // 3-Segment Progress Bar

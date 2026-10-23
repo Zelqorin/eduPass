@@ -68,6 +68,7 @@ import com.edupass.app.ui.theme.EduPassTextMuted
 import com.edupass.app.ui.theme.EduPassTextSecondary
 import com.edupass.app.ui.theme.EduPassTheme
 import com.edupass.app.ui.theme.EduPassWhite
+import com.edupass.app.ui.components.EduPassTopHeader
 import java.util.Locale
 
 // ---------------------------------------------------------------------------
@@ -121,12 +122,6 @@ fun DocumentUploadScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = EduPassScreenBg,
-        bottomBar = {
-            PermissionBottomNavBar(
-                selectedTabIndex = selectedNavTab,
-                onTabSelected = { selectedNavTab = it }
-            )
-        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -138,7 +133,11 @@ fun DocumentUploadScreen(
             horizontalAlignment = Alignment.Start
         ) {
             // 1. Header Bar: College Logo + App Name + Notification Bell
-            DocumentUploadHeader(onNotificationClick = onNotificationClick)
+            EduPassTopHeader(
+                showBackButton = true,
+                onBackClick = onBackClick,
+                onNotificationClick = onNotificationClick
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -309,57 +308,6 @@ fun DocumentUploadScreen(
     }
 }
 
-// ---------------------------------------------------------------------------
-// Header Component
-// ---------------------------------------------------------------------------
-
-@Composable
-private fun DocumentUploadHeader(onNotificationClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_edupass_logo),
-                contentDescription = "VIIT Logo",
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
-                Text(
-                    text = "EduPass",
-                    color = EduPassNavy,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "STUDENT ACCESS",
-                    color = EduPassTextSecondary,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.8.sp
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .size(42.dp)
-                .background(EduPassWhite, RoundedCornerShape(12.dp))
-                .border(1.dp, EduPassCardBorder, RoundedCornerShape(12.dp))
-                .clickable { onNotificationClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                imageVector = UploadScreenIcons.NotificationBell,
-                contentDescription = "Notifications",
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // 3-Segment Progress Indicator (Steps 1 & 2 completed, step 3 incomplete)

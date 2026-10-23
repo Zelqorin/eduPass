@@ -15,6 +15,7 @@ import com.edupass.app.ui.student.permission.RequestReviewScreen
 import com.edupass.app.ui.student.permission.DocumentUploadScreen
 import com.edupass.app.ui.student.permission.ApplyPermissionScreen
 import com.edupass.app.ui.student.dashboard.StudentDashboardScreen
+import com.edupass.app.ui.login.UserRole
 import com.edupass.app.ui.login.LoginScreen
 import com.edupass.app.ui.splash.SplashScreen
 import com.edupass.app.ui.theme.EduPassTheme
@@ -24,10 +25,14 @@ enum class Screen {
     Splash,
     Login,
     StudentDashBoard,
+    FacultyDashboard,
+    AdminDashboard,
     ApplyPermission,
     DocumentUpload,
     RequestReview,
     MyRequests,
+    Notifications,
+    PermissionDetails
 }
 
 class MainActivity : ComponentActivity() {
@@ -50,7 +55,11 @@ class MainActivity : ComponentActivity() {
                     Screen.Login -> {
                         LoginScreen(
                             onSignInClick = { collegeId, role ->
-                                currentScreen = Screen.StudentDashBoard
+                                currentScreen = when (role) {
+                                    UserRole.STUDENT -> Screen.StudentDashBoard
+                                    UserRole.FACULTY -> Screen.FacultyDashboard
+                                    UserRole.ADMIN -> Screen.AdminDashboard
+                                }
                             }
                         )
                     }
@@ -64,6 +73,15 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
+                    
+                    Screen.FacultyDashboard -> {
+                        androidx.compose.material3.Text(text = "Faculty Dashboard Coming Soon")
+                    }
+                    
+                    Screen.AdminDashboard -> {
+                        androidx.compose.material3.Text(text = "Admin Dashboard Coming Soon")
+                    }
+                    
                     Screen.ApplyPermission -> {
                         ApplyPermissionScreen(
                             onBackClick = {
@@ -99,6 +117,14 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
+                    }
+                    
+                    Screen.Notifications -> {
+                        androidx.compose.material3.Text(text = "Notifications Coming Soon")
+                    }
+                    
+                    Screen.PermissionDetails -> {
+                        androidx.compose.material3.Text(text = "Permission Details Coming Soon")
                     }
                 }
             }
