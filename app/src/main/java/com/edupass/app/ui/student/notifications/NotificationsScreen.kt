@@ -50,6 +50,7 @@ import com.edupass.app.ui.theme.EduPassScreenBg
 import com.edupass.app.ui.theme.EduPassTextSecondary
 import com.edupass.app.ui.theme.EduPassTheme
 import com.edupass.app.ui.theme.EduPassWhite
+import com.edupass.app.ui.components.EduPassTopHeader
 
 // ---------------------------------------------------------------------------
 // Notification Data Model
@@ -72,6 +73,7 @@ data class NotificationItem(
 @Composable
 fun NotificationsScreen(
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
     onNotificationHeaderClick: () -> Unit = {},
     onNotificationItemClick: (NotificationItem) -> Unit = {}
 ) {
@@ -138,7 +140,10 @@ fun NotificationsScreen(
         horizontalAlignment = Alignment.Start
     ) {
         // 1. Header: Brand Logo + Notification Bell
-        NotificationsHeader(onNotificationClick = onNotificationHeaderClick)
+        EduPassTopHeader(
+            showBackButton = true,
+            onBackClick = onBackClick,
+            onNotificationClick = onNotificationHeaderClick)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -210,57 +215,6 @@ fun NotificationsScreen(
     }
 }
 
-// ---------------------------------------------------------------------------
-// Header Component
-// ---------------------------------------------------------------------------
-
-@Composable
-private fun NotificationsHeader(onNotificationClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_edupass_logo),
-                contentDescription = "VIIT Crest",
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
-                Text(
-                    text = "EduPass",
-                    color = EduPassNavy,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "STUDENT ACCESS",
-                    color = EduPassTextSecondary,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.8.sp
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .size(42.dp)
-                .background(EduPassWhite, RoundedCornerShape(12.dp))
-                .border(1.dp, EduPassCardBorder, RoundedCornerShape(12.dp))
-                .clickable { onNotificationClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                imageVector = NotificationIcons.Bell,
-                contentDescription = "Notifications",
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Blue Notification Banner
@@ -398,28 +352,6 @@ private fun NotificationCard(
 // ---------------------------------------------------------------------------
 
 private object NotificationIcons {
-    val Bell: ImageVector = ImageVector.Builder(
-        name = "NotificationBell",
-        defaultWidth = 24.dp,
-        defaultHeight = 24.dp,
-        viewportWidth = 24f,
-        viewportHeight = 24f
-    ).path(
-        stroke = SolidColor(EduPassNavy),
-        strokeLineWidth = 1.8f
-    ) {
-        moveTo(18f, 8f)
-        curveTo(18f, 5.79f, 16.21f, 4f, 14f, 4f)
-        lineTo(10f, 4f)
-        curveTo(7.79f, 4f, 6f, 5.79f, 6f, 8f)
-        curveTo(6f, 13f, 4f, 15f, 4f, 17f)
-        lineTo(20f, 17f)
-        curveTo(20f, 15f, 18f, 13f, 18f, 8f)
-        close()
-        moveTo(10f, 19f)
-        curveTo(10f, 20.1f, 10.9f, 21f, 12f, 21f)
-        curveTo(13.1f, 21f, 14f, 20.1f, 14f, 19f)
-    }.build()
 
     val Clock: ImageVector = ImageVector.Builder(
         name = "ClockOutline",

@@ -128,6 +128,8 @@ fun StudentDashboardScreen(
     onRequestItemClick: (RecentRequest) -> Unit = {},
     onEventItemClick: (CollegeEvent) -> Unit = {},
     onRequestsTabClick: () -> Unit = {},
+    onPassesTabClick: () -> Unit = {},
+    onProfileTabClick: () -> Unit = {}
 ) {
     var selectedTab by remember { mutableIntStateOf(StudentNavTab.HOME.ordinal) }
 
@@ -185,10 +187,11 @@ fun StudentDashboardScreen(
             EduPassBottomNavBar(
                 selectedTabIndex = selectedTab,
                 onTabSelected = { index ->
-                    if (index == 1) {
-                        onRequestsTabClick()
-                    } else {
-                        selectedTab = index
+                    when (index) {
+                        0 -> selectedTab = 0
+                        1 -> onRequestsTabClick()
+                        2 -> onPassesTabClick()
+                        3 -> onProfileTabClick()
                     }
                 }
             )

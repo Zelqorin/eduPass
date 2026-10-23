@@ -1,4 +1,4 @@
-package com.edupass.app.ui.student.pass
+package com.edupass.app.ui.student.passes
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas

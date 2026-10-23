@@ -10,6 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.edupass.app.ui.student.notifications.NotificationsScreen
+import com.edupass.app.ui.student.passes.DigitalPermissionPassScreen
 import com.edupass.app.ui.student.requests.MyRequestsScreen
 import com.edupass.app.ui.student.permission.RequestReviewScreen
 import com.edupass.app.ui.student.permission.DocumentUploadScreen
@@ -32,7 +34,9 @@ enum class Screen {
     RequestReview,
     MyRequests,
     Notifications,
-    PermissionDetails
+    PermissionDetails,
+    Passes,
+    Profile
 }
 
 class MainActivity : ComponentActivity() {
@@ -65,11 +69,23 @@ class MainActivity : ComponentActivity() {
                     }
                     Screen.StudentDashBoard -> {
                         StudentDashboardScreen(
+                            onNotificationClick = {
+                                currentScreen = Screen.Notifications
+                            },
+                            
                             onRequestPermissionClick = {
                                 currentScreen = Screen.ApplyPermission
                             },
                             onRequestsTabClick = {
                                 currentScreen = Screen.MyRequests
+                            },
+                                
+                            onPassesTabClick = {
+                                currentScreen = Screen.Passes
+                            },
+                                
+                            onProfileTabClick = {
+                                currentScreen = Screen.Profile
                             }
                         )
                     }
@@ -86,6 +102,9 @@ class MainActivity : ComponentActivity() {
                         ApplyPermissionScreen(
                             onBackClick = {
                                 currentScreen = Screen.StudentDashBoard
+                            },
+                            onNotificationClick = {
+                                currentScreen = Screen.Notifications
                             },
                             onNextClick = {
                                 currentScreen = Screen.DocumentUpload
@@ -111,16 +130,46 @@ class MainActivity : ComponentActivity() {
                     }
                     Screen.MyRequests -> {
                         MyRequestsScreen(
+                            onNotificationClick = {
+                                currentScreen = Screen.Notifications
+                            },
+                            
                             onBottomNavTabSelected = { index ->
-                                if (index == 0) {
-                                    currentScreen = Screen.StudentDashBoard
+                                when (index) {
+                                    0 -> currentScreen = Screen.StudentDashBoard
+                                    2 -> currentScreen = Screen.Passes
+                                    3 -> currentScreen = Screen.Profile
                                 }
                             }
                         )
                     }
                     
+                    Screen.Passes -> {
+                        DigitalPermissionPassScreen(
+                            onBackClick = {
+                                currentScreen = Screen.StudentDashBoard
+                            },
+                                
+                            onNotificationClick = {
+                                currentScreen = Screen.Notifications
+                            },
+                            
+                            onViewDigitalPassClick = {
+                                currentScreen = Screen.PermissionDetails
+                            }
+                        )
+                    }
+                    
+                    Screen.Profile -> {
+                        androidx.compose.material3.Text(text = "Profile Coming Soon")
+                    }
+                    
                     Screen.Notifications -> {
-                        androidx.compose.material3.Text(text = "Notifications Coming Soon")
+                        NotificationsScreen(
+                            onBackClick = {
+                                currentScreen = Screen.StudentDashBoard
+                            }
+                        )
                     }
                     
                     Screen.PermissionDetails -> {

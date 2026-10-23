@@ -1,4 +1,4 @@
-package com.edupass.app.ui.student.pass
+package com.edupass.app.ui.student.passes
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -50,7 +50,7 @@ import com.edupass.app.ui.theme.EduPassScreenBg
 import com.edupass.app.ui.theme.EduPassTextSecondary
 import com.edupass.app.ui.theme.EduPassTheme
 import com.edupass.app.ui.theme.EduPassWhite
-
+import com.edupass.app.ui.components.EduPassTopHeader
 // ---------------------------------------------------------------------------
 // Data Models
 // ---------------------------------------------------------------------------
@@ -80,6 +80,7 @@ data class PassTimelineStage(
 fun DigitalPermissionPassScreen(
     modifier: Modifier = Modifier,
     passData: DigitalPassData = remember { DigitalPassData() },
+    onBackClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
     onViewDigitalPassClick: (String) -> Unit = {}
 ) {
@@ -103,7 +104,11 @@ fun DigitalPermissionPassScreen(
         horizontalAlignment = Alignment.Start
     ) {
         // 1. Header: Brand Logo + Notification Bell
-        PassHeader(onNotificationClick = onNotificationClick)
+        EduPassTopHeader(
+            showBackButton = true,
+            onBackClick = onBackClick,
+            onNotificationClick = onNotificationClick
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -180,57 +185,6 @@ fun DigitalPermissionPassScreen(
     }
 }
 
-// ---------------------------------------------------------------------------
-// Header Component
-// ---------------------------------------------------------------------------
-
-@Composable
-private fun PassHeader(onNotificationClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_edupass_logo),
-                contentDescription = "VIIT Crest",
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
-                Text(
-                    text = "EduPass",
-                    color = EduPassNavy,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "STUDENT ACCESS",
-                    color = EduPassTextSecondary,
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.8.sp
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .size(42.dp)
-                .background(EduPassWhite, RoundedCornerShape(12.dp))
-                .border(1.dp, EduPassCardBorder, RoundedCornerShape(12.dp))
-                .clickable { onNotificationClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                imageVector = PassIcons.NotificationBell,
-                contentDescription = "Notifications",
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Permission Summary Banner (Blue Card with Approved Badge)
