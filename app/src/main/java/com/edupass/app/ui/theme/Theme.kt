@@ -16,11 +16,11 @@ private val LightColorScheme = lightColorScheme(
     onPrimaryContainer = EduPassTextPrimary,
     secondary = EduPassBlueDark,
     onSecondary = EduPassTextOnPrimary,
-    background = EduPassBackground,
+    background = EduPassScreenBg,
     onBackground = EduPassTextPrimary,
-    surface = EduPassSurface,
+    surface = EduPassWhite,
     onSurface = EduPassTextPrimary,
-    surfaceVariant = EduPassBackground,
+    surfaceVariant = EduPassScreenBg,
     onSurfaceVariant = EduPassTextSecondary,
     outline = EduPassTextSecondary
 )
