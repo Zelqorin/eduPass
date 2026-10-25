@@ -1,5 +1,7 @@
 package com.edupass.app.ui.student.permission
 
+import com.edupass.app.data.UserProfile
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -73,7 +75,20 @@ data class ApplicantIdentity(
     val department: String = "Computer Science & Engineering",
     val year: String = "3rd Year",
     val section: String = "B"
-)
+) {
+    companion object {
+        fun fromProfile(profile: UserProfile?): ApplicantIdentity {
+            if (profile == null) return ApplicantIdentity()
+            return ApplicantIdentity(
+                studentName = profile.fullName.ifBlank { "Student" },
+                studentId = profile.collegeId.ifBlank { "—" },
+                department = "Not Assigned",
+                year = "—",
+                section = "—"
+            )
+        }
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Main Screen Composable
@@ -82,7 +97,8 @@ data class ApplicantIdentity(
 @Composable
 fun ApplyPermissionScreen(
     modifier: Modifier = Modifier,
-    applicant: ApplicantIdentity = remember { ApplicantIdentity() },
+    profile: UserProfile? = null,
+    applicant: ApplicantIdentity = remember(profile) { ApplicantIdentity.fromProfile(profile) },
     onNotificationClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
     onNextClick: () -> Unit = {}

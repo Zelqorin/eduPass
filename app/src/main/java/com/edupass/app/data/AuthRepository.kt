@@ -22,6 +22,8 @@ sealed interface LoginResult {
 }
 
 object AuthRepository {
+    var currentProfile: UserProfile? = null
+        private set
 
     private val supabase = SupabaseProvider.client
 
@@ -61,6 +63,7 @@ object AuthRepository {
             val profile = profiles.firstOrNull()
                 ?: run {
                     supabase.auth.signOut()
+                    currentProfile = null
                     return LoginResult.Failure(
                         "Your account profile could not be found."
                     )
@@ -68,11 +71,13 @@ object AuthRepository {
 
             if (profile.role != selectedRole.lowercase()) {
                 supabase.auth.signOut()
+                currentProfile = null
                 return LoginResult.Failure(
                     "The selected role does not match your account."
                 )
             }
 
+            currentProfile = profile
             return LoginResult.Success(profile)
 
         } catch (e: Exception) {
@@ -84,5 +89,6 @@ object AuthRepository {
 
     suspend fun logout() {
         supabase.auth.signOut()
+        currentProfile = null
     }
 }

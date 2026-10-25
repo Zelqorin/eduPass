@@ -1,5 +1,7 @@
 package com.edupass.app.ui.student.dashboard
 
+import com.edupass.app.data.UserProfile
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -118,8 +120,11 @@ enum class StudentNavTab(val label: String) {
 @Composable
 fun StudentDashboardScreen(
     modifier: Modifier = Modifier,
-    studentName: String = "Arjun",
-    studentDetails: String = "3rd Year · CSE · Section B",
+    profile: UserProfile? = null,
+    studentName: String = profile?.fullName?.takeIf { it.isNotBlank() } ?: "Arjun",
+    studentDetails: String = profile?.let {
+        if (it.collegeId.isNotBlank()) "${it.collegeId} · Student" else "Student"
+    } ?: "3rd Year · CSE · Section B",
     onNotificationClick: () -> Unit = {},
     onRequestPermissionClick: () -> Unit = {},
     onViewAllRequestsClick: () -> Unit = {},

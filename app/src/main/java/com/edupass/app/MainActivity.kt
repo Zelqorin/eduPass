@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.Box
 import com.edupass.app.data.AuthRepository
 import com.edupass.app.data.LoginResult
+import com.edupass.app.data.UserProfile
 import kotlinx.coroutines.launch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             EduPassTheme {
                 
+                var userProfile by remember { mutableStateOf<UserProfile?>(null) }
                 var loginError by remember { mutableStateOf<String?>(null) }
                 var isLoggingIn by remember { mutableStateOf(false) }
                 val scope = rememberCoroutineScope()
@@ -108,6 +110,7 @@ class MainActivity : ComponentActivity() {
 
                                 when (result) {
                                     is LoginResult.Success -> {
+                                        userProfile = result.profile
                                         when (result.profile.role.lowercase()) {
                                             "student" -> currentScreen = Screen.StudentDashBoard
 
@@ -153,6 +156,7 @@ class MainActivity : ComponentActivity() {
                     
                     Screen.StudentDashBoard -> {
                         StudentDashboardScreen(
+                            profile = userProfile,
                             onNotificationClick = {
                                 currentScreen = Screen.Notifications
                             },
@@ -184,6 +188,7 @@ class MainActivity : ComponentActivity() {
                     
                     Screen.ApplyPermission -> {
                         ApplyPermissionScreen(
+                            profile = userProfile,
                             onBackClick = {
                                 currentScreen = Screen.StudentDashBoard
                             },
