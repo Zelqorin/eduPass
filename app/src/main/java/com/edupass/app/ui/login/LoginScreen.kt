@@ -79,7 +79,11 @@ enum class UserRole(val displayName: String) {
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onSignInClick: (collegeId: String, role: UserRole) -> Unit = { _, _ -> },
+    onSignInClick: (
+    collegeId: String,
+    password: String,
+    role: UserRole
+) -> Unit = { _, _, _ -> },
     onCollegeAccountClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {}
 ) {
@@ -233,7 +237,7 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         focusManager.clearFocus()
-                        onSignInClick(collegeId, selectedRole)
+                        onSignInClick(collegeId, password, selectedRole)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

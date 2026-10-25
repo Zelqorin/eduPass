@@ -1,5 +1,15 @@
 package com.edupass.app
 
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Box
+import com.edupass.app.data.AuthRepository
+import com.edupass.app.data.LoginResult
+import kotlinx.coroutines.launch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -47,6 +57,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EduPassTheme {
+                
+                var loginError by remember { mutableStateOf<String?>(null) }
+                var isLoggingIn by remember { mutableStateOf(false) }
+                val scope = rememberCoroutineScope()
+                
                 var currentScreen by remember { mutableStateOf(Screen.Splash) }
 
                 BackHandler(enabled = currentScreen != Screen.Splash && currentScreen != Screen.Login) {
@@ -66,17 +81,76 @@ class MainActivity : ComponentActivity() {
                             currentScreen = Screen.Login
                         }
                     }
-                    Screen.Login -> {
+                    
+                Screen.Login -> {
+                    Box {
                         LoginScreen(
-                            onSignInClick = { collegeId, role ->
-                                currentScreen = when (role) {
-                                    UserRole.STUDENT -> Screen.StudentDashBoard
-                                    UserRole.FACULTY -> Screen.FacultyDashboard
-                                    UserRole.ADMIN -> Screen.AdminDashboard
+                            onSignInClick = { collegeId, password, role ->
+
+                            if (collegeId.isBlank() || password.isBlank()) {
+                                loginError = "Enter your roll number and password."
+                            } else if (!isLoggingIn) {
+
+                            scope.launch {
+                                isLoggingIn = true
+                                loginError = null
+
+                                try {
+                                    val result = AuthRepository.login(
+                                    rollNumber = collegeId,
+                                    password = password,
+                                    selectedRole = when (role) {
+                                        UserRole.STUDENT -> "student"
+                                        UserRole.FACULTY -> "faculty"
+                                        UserRole.ADMIN -> "admin"
+                                    }
+                                )
+
+                                when (result) {
+                                    is LoginResult.Success -> {
+                                        when (result.profile.role.lowercase()) {
+                                            "student" -> currentScreen = Screen.StudentDashBoard
+
+                                            "faculty" -> currentScreen = Screen.FacultyDashboard
+
+                                            "admin" -> currentScreen = Screen.AdminDashboard
+
+                                            else -> {
+                                                loginError = "Your account has an unsupported role."
+                                            }
+                                        }
+                                    }
+
+                                    is LoginResult.Failure -> {
+                                        loginError = result.message
+                                    }
                                 }
+                            } catch (e: Exception) {
+                                loginError =
+                                    "Login failed. Please check your connection."
+                            } finally {
+                                isLoggingIn = false
                             }
-                        )
+                        }
                     }
+                }
+            )
+
+            if (isLoggingIn) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+              )
+            }
+
+            loginError?.let { message ->
+                Text(
+                    text = message,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
+            }
+        }
+    }
+                    
                     Screen.StudentDashBoard -> {
                         StudentDashboardScreen(
                             onNotificationClick = {
