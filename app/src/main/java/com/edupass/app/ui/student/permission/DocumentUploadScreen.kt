@@ -93,12 +93,13 @@ private const val MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 fun DocumentUploadScreen(
     modifier: Modifier = Modifier,
     initialDocument: SelectedDocument? = null,
+    onDocumentChange: (SelectedDocument?) -> Unit = {},
     onBackClick: () -> Unit = {},
     onContinueClick: (SelectedDocument?) -> Unit = {},
     onNotificationClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var selectedDoc by remember { mutableStateOf(initialDocument) }
+    var selectedDoc by remember(initialDocument) { mutableStateOf(initialDocument) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var selectedNavTab by remember { mutableIntStateOf(1) } // 1 = Requests selected
 
@@ -115,6 +116,7 @@ fun DocumentUploadScreen(
             } else {
                 errorMessage = null
                 selectedDoc = resolvedDoc
+                onDocumentChange(resolvedDoc)
             }
         }
     }
@@ -204,6 +206,7 @@ fun DocumentUploadScreen(
                     onDeleteClick = {
                         selectedDoc = null
                         errorMessage = null
+                        onDocumentChange(null)
                     }
                 )
             }
@@ -251,7 +254,10 @@ fun DocumentUploadScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = onBackClick,
+                    onClick = {
+                        onDocumentChange(selectedDoc)
+                        onBackClick()
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp),
@@ -271,7 +277,10 @@ fun DocumentUploadScreen(
                 }
 
                 Button(
-                    onClick = { onContinueClick(selectedDoc) },
+                    onClick = {
+                        onDocumentChange(selectedDoc)
+                        onContinueClick(selectedDoc)
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp),

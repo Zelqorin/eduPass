@@ -61,7 +61,8 @@ data class RequestReviewData(
     val permissionType: String = "Internship",
     val schedule: String = "18 Jun 2025·10:00 AM–02:00 PM",
     val destination: String = "Nexora Labs, Koramangala",
-    val reason: String = "Summer internship orientation at Nexora Labs"
+    val reason: String = "Summer internship orientation at Nexora Labs",
+    val documentName: String? = null
 )
 
 // ---------------------------------------------------------------------------
@@ -444,6 +445,11 @@ private fun RequestDetailsSummaryCard(data: RequestReviewData) {
             HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
 
             SummaryItemRow(label = "Reason", value = data.reason)
+
+            if (!data.documentName.isNullOrBlank()) {
+                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+                SummaryItemRow(label = "Document", value = data.documentName)
+            }
         }
     }
 }

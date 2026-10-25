@@ -29,6 +29,7 @@ import com.edupass.app.ui.student.requests.MyRequestsScreen
 import com.edupass.app.ui.student.permission.RequestReviewScreen
 import com.edupass.app.ui.student.permission.DocumentUploadScreen
 import com.edupass.app.ui.student.permission.ApplyPermissionScreen
+import com.edupass.app.ui.student.permission.PermissionFormState
 import com.edupass.app.ui.student.dashboard.StudentDashboardScreen
 import com.edupass.app.ui.login.UserRole
 import com.edupass.app.ui.login.LoginScreen
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
             EduPassTheme {
                 
                 var userProfile by remember { mutableStateOf<UserProfile?>(null) }
+                var permissionFormState by remember { mutableStateOf(PermissionFormState()) }
                 var loginError by remember { mutableStateOf<String?>(null) }
                 var isLoggingIn by remember { mutableStateOf(false) }
                 val scope = rememberCoroutineScope()
@@ -70,6 +72,8 @@ class MainActivity : ComponentActivity() {
                     when (currentScreen) {
                         Screen.Notifications -> currentScreen = Screen.StudentDashBoard
                         Screen.PermissionDetails -> currentScreen = Screen.Passes
+                        Screen.DocumentUpload -> currentScreen = Screen.ApplyPermission
+                        Screen.RequestReview -> currentScreen = Screen.DocumentUpload
                         else -> currentScreen = Screen.StudentDashBoard
                     }
                 }
@@ -189,6 +193,10 @@ class MainActivity : ComponentActivity() {
                     Screen.ApplyPermission -> {
                         ApplyPermissionScreen(
                             profile = userProfile,
+                            formState = permissionFormState,
+                            onFormStateChange = { newState ->
+                                permissionFormState = newState
+                            },
                             onBackClick = {
                                 currentScreen = Screen.StudentDashBoard
                             },
@@ -202,18 +210,36 @@ class MainActivity : ComponentActivity() {
                     }
                     Screen.DocumentUpload -> {
                         DocumentUploadScreen(
+                            initialDocument = permissionFormState.selectedDocument,
+                            onDocumentChange = { doc ->
+                                permissionFormState = permissionFormState.copy(selectedDocument = doc)
+                            },
                             onBackClick = {
                                 currentScreen = Screen.ApplyPermission
                             },
-                            onContinueClick = {
+                            onContinueClick = { doc ->
+                                permissionFormState = permissionFormState.copy(selectedDocument = doc)
                                 currentScreen = Screen.RequestReview
+                            },
+                            onNotificationClick = {
+                                currentScreen = Screen.Notifications
                             }
                         )
                     }
                     Screen.RequestReview -> {
+                        val studentNameWithId = userProfile?.let {
+                            "${it.fullName} · ${it.collegeId}"
+                        } ?: "Arjun Kumar 22CSE1047"
+
+                        val reviewData = permissionFormState.toReviewData(studentNameWithId)
+
                         RequestReviewScreen(
+                            reviewData = reviewData,
                             onEditDetailsClick = {
                                 currentScreen = Screen.ApplyPermission
+                            },
+                            onNotificationClick = {
+                                currentScreen = Screen.Notifications
                             }
                         )
                     }

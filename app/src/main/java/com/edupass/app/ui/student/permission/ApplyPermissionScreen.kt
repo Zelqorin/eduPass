@@ -99,19 +99,12 @@ fun ApplyPermissionScreen(
     modifier: Modifier = Modifier,
     profile: UserProfile? = null,
     applicant: ApplicantIdentity = remember(profile) { ApplicantIdentity.fromProfile(profile) },
+    formState: PermissionFormState = PermissionFormState(),
+    onFormStateChange: (PermissionFormState) -> Unit = {},
     onNotificationClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
     onNextClick: () -> Unit = {}
 ) {
-    // Interactive Form State (Step 1)
-    var permissionType by rememberSaveable { mutableStateOf("Internship") }
-    var selectedDate by rememberSaveable { mutableStateOf("18 Jun 2025") }
-    var startTime by rememberSaveable { mutableStateOf("10:00 AM") }
-    var endTime by rememberSaveable { mutableStateOf("02:00 PM") }
-    var reason by rememberSaveable { mutableStateOf("") }
-    var organization by rememberSaveable { mutableStateOf("") }
-    var contactDetails by rememberSaveable { mutableStateOf("") }
-
     // Wrap everything in a Box to allow floating the Next button at the bottom
     Box(
         modifier = modifier
@@ -173,20 +166,20 @@ fun ApplyPermissionScreen(
 
             // 6. Purpose and Schedule Form Card
             PermissionDetailsCard(
-                permissionType = permissionType,
-                onPermissionTypeChange = { permissionType = it },
-                selectedDate = selectedDate,
-                onDateChange = { selectedDate = it },
-                startTime = startTime,
-                onStartTimeChange = { startTime = it },
-                endTime = endTime,
-                onEndTimeChange = { endTime = it },
-                reason = reason,
-                onReasonChange = { reason = it },
-                organization = organization,
-                onOrganizationChange = { organization = it },
-                contactDetails = contactDetails,
-                onContactDetailsChange = { contactDetails = it }
+                permissionType = formState.permissionType,
+                onPermissionTypeChange = { onFormStateChange(formState.copy(permissionType = it)) },
+                selectedDate = formState.selectedDate,
+                onDateChange = { onFormStateChange(formState.copy(selectedDate = it)) },
+                startTime = formState.startTime,
+                onStartTimeChange = { onFormStateChange(formState.copy(startTime = it)) },
+                endTime = formState.endTime,
+                onEndTimeChange = { onFormStateChange(formState.copy(endTime = it)) },
+                reason = formState.reason,
+                onReasonChange = { onFormStateChange(formState.copy(reason = it)) },
+                organization = formState.organization,
+                onOrganizationChange = { onFormStateChange(formState.copy(organization = it)) },
+                contactDetails = formState.contactDetails,
+                onContactDetailsChange = { onFormStateChange(formState.copy(contactDetails = it)) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
