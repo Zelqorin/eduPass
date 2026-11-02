@@ -19,6 +19,15 @@ import com.edupass.app.ui.student.permission.RequestReviewScreen
 import com.edupass.app.ui.student.permission.DocumentUploadScreen
 import com.edupass.app.ui.student.permission.ApplyPermissionScreen
 import com.edupass.app.ui.student.dashboard.StudentDashboardScreen
+import com.edupass.app.ui.faculty.FacultyTypography
+import com.edupass.app.ui.faculty.dashboard.FacultyDashboardScreen
+import com.edupass.app.ui.faculty.live.CurrentlyOutsideScreen
+import com.edupass.app.ui.faculty.overview.FacultyOverviewScreen
+import com.edupass.app.ui.faculty.profile.FacultyProfileScreen
+import com.edupass.app.ui.faculty.reports.FacultyReportsScreen
+import com.edupass.app.ui.faculty.requests.PermissionRequestsScreen
+import com.edupass.app.ui.faculty.requests.ReviewRequestScreen
+import com.edupass.app.ui.faculty.sections.SectionOverviewScreen
 import com.edupass.app.ui.login.UserRole
 import com.edupass.app.ui.login.LoginScreen
 import com.edupass.app.ui.splash.SplashScreen
@@ -38,6 +47,13 @@ enum class Screen {
     Notifications,
     Passes,
     PermissionDetails,
+    FacultySectionOverview,
+    FacultyPermissionRequests,
+    FacultyReviewRequest,
+    FacultyLive,
+    FacultyOverview,
+    FacultyReports,
+    FacultyProfile,
     Profile
 }
 
@@ -49,10 +65,17 @@ class MainActivity : ComponentActivity() {
             EduPassTheme {
                 var currentScreen by remember { mutableStateOf(Screen.Splash) }
 
-                BackHandler(enabled = currentScreen != Screen.Splash && currentScreen != Screen.Login) {
+                BackHandler(enabled = currentScreen != Screen.Splash && currentScreen != Screen.Login && currentScreen != Screen.StudentDashBoard && currentScreen != Screen.FacultyDashboard) {
                     when (currentScreen) {
                         Screen.Notifications -> currentScreen = Screen.StudentDashBoard
                         Screen.PermissionDetails -> currentScreen = Screen.Passes
+                        Screen.FacultySectionOverview,
+                        Screen.FacultyPermissionRequests,
+                        Screen.FacultyLive,
+                        Screen.FacultyProfile,
+                        Screen.FacultyOverview,
+                        Screen.FacultyReports -> currentScreen = Screen.FacultyDashboard
+                        Screen.FacultyReviewRequest -> currentScreen = Screen.FacultyPermissionRequests
                         else -> currentScreen = Screen.StudentDashBoard
                     }
                 }
@@ -101,7 +124,87 @@ class MainActivity : ComponentActivity() {
                     }
                     
                     Screen.FacultyDashboard -> {
-                        androidx.compose.material3.Text(text = "Faculty Dashboard Coming Soon")
+                        FacultyTypography {
+                            FacultyDashboardScreen(
+                                onPendingRequestsClick = { currentScreen = Screen.FacultyPermissionRequests },
+                                onOutsideClick = { currentScreen = Screen.FacultyLive },
+                                onReportsClick = { currentScreen = Screen.FacultyReports },
+                                onAttentionClick = { currentScreen = Screen.FacultyReviewRequest },
+                                onQueueClick = { currentScreen = Screen.FacultyOverview },
+                                onHomeTabClick = { currentScreen = Screen.FacultyDashboard },
+                                onSectionsTabClick = { currentScreen = Screen.FacultySectionOverview },
+                                onLiveTabClick = { currentScreen = Screen.FacultyLive },
+                                onProfileTabClick = { currentScreen = Screen.FacultyProfile }
+                            )
+                        }
+                    }
+
+                    Screen.FacultySectionOverview -> {
+                        FacultyTypography {
+                            SectionOverviewScreen(
+                                onSectionClick = { currentScreen = Screen.FacultyPermissionRequests },
+                                onHomeTabClick = { currentScreen = Screen.FacultyDashboard },
+                                onSectionsTabClick = { currentScreen = Screen.FacultySectionOverview },
+                                onLiveTabClick = { currentScreen = Screen.FacultyLive },
+                                onProfileTabClick = { currentScreen = Screen.FacultyProfile }
+                            )
+                        }
+                    }
+
+                    Screen.FacultyPermissionRequests -> {
+                        FacultyTypography {
+                            PermissionRequestsScreen(
+                                onRequestClick = { currentScreen = Screen.FacultyReviewRequest },
+                                onHomeTabClick = { currentScreen = Screen.FacultyDashboard },
+                                onSectionsTabClick = { currentScreen = Screen.FacultySectionOverview },
+                                onLiveTabClick = { currentScreen = Screen.FacultyLive },
+                                onProfileTabClick = { currentScreen = Screen.FacultyProfile }
+                            )
+                        }
+                    }
+
+                    Screen.FacultyReviewRequest -> {
+                        FacultyTypography {
+                            ReviewRequestScreen()
+                        }
+                    }
+
+                    Screen.FacultyLive -> {
+                        FacultyTypography {
+                            CurrentlyOutsideScreen(
+                                onHomeTabClick = { currentScreen = Screen.FacultyDashboard },
+                                onSectionsTabClick = { currentScreen = Screen.FacultySectionOverview },
+                                onLiveTabClick = { currentScreen = Screen.FacultyLive },
+                                onProfileTabClick = { currentScreen = Screen.FacultyProfile }
+                            )
+                        }
+                    }
+
+                    Screen.FacultyOverview -> {
+                        FacultyTypography {
+                            FacultyOverviewScreen(
+                                onOpenQueueClick = { currentScreen = Screen.FacultyPermissionRequests },
+                                onRequestClick = { currentScreen = Screen.FacultyReviewRequest }
+                            )
+                        }
+                    }
+
+                    Screen.FacultyReports -> {
+                        FacultyTypography {
+                            FacultyReportsScreen()
+                        }
+                    }
+
+                    Screen.FacultyProfile -> {
+                        FacultyTypography {
+                            FacultyProfileScreen(
+                                onSignOutClick = { currentScreen = Screen.Login },
+                                onHomeTabClick = { currentScreen = Screen.FacultyDashboard },
+                                onSectionsTabClick = { currentScreen = Screen.FacultySectionOverview },
+                                onLiveTabClick = { currentScreen = Screen.FacultyLive },
+                                onProfileTabClick = { currentScreen = Screen.FacultyProfile }
+                            )
+                        }
                     }
                     
                     Screen.AdminDashboard -> {
